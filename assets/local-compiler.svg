@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 760" role="img" aria-labelledby="t d">
+  <title id="t">Build and remember</title>
+  <desc id="d">A clean three-step flow from a planner output to a playable scene and a saved world state.</desc>
+  <defs><filter id="s" x="-20%" y="-20%" width="140%" height="140%"><feDropShadow dx="0" dy="14" stdDeviation="18" flood-color="#63716d" flood-opacity=".14"/></filter></defs>
+  <rect width="1200" height="760" rx="32" fill="#edf2ef"/>
+  <g filter="url(#s)">
+    <rect x="66" y="122" width="286" height="500" rx="36" fill="#d7e8e4"/>
+    <rect x="457" y="122" width="286" height="500" rx="36" fill="#f0dda6"/>
+    <rect x="848" y="122" width="286" height="500" rx="36" fill="#bfd7a9"/>
+  </g>
+  <g font-family="ui-sans-serif,-apple-system,sans-serif" text-anchor="middle">
+    <text x="209" y="184" fill="#47706a" font-size="17" font-weight="700" letter-spacing="3">SCENE PLAN</text>
+    <text x="600" y="184" fill="#806a36" font-size="17" font-weight="700" letter-spacing="3">LOCAL BUILD</text>
+    <text x="991" y="184" fill="#4e7348" font-size="17" font-weight="700" letter-spacing="3">SAVED WORLD</text>
+    <text x="209" y="560" fill="#244541" font-size="29" font-weight="700">Decide</text>
+    <text x="600" y="560" fill="#5a4927" font-size="29" font-weight="700">Generate</text>
+    <text x="991" y="560" fill="#365433" font-size="29" font-weight="700">Remember</text>
+  </g>
+  <!-- plan icon -->
+  <g transform="translate(127 250)" fill="none" stroke="#488478" stroke-width="14" stroke-linecap="round"><path d="M0 20h164M0 76h110M0 132h140"/><circle cx="180" cy="20" r="13" fill="#ff7169" stroke="white" stroke-width="7"/></g>
+  <!-- generated tile icon -->
+  <g transform="translate(494 240)"><rect width="212" height="210" rx="26" fill="#d6d7a7"/><path d="M-8 118h228M106-8v226" stroke="#697579" stroke-width="35"/><g fill="#78959b"><rect x="18" y="20" width="44" height="61" rx="6"/><rect x="150" y="24" width="42" height="57" rx="6"/><rect x="22" y="148" width="40" height="43" rx="6"/><rect x="151" y="145" width="41" height="46" rx="6"/></g><g fill="#3e7c58"><circle cx="82" cy="46" r="7"/><circle cx="177" cy="116" r="7"/><circle cx="74" cy="174" r="6"/></g></g>
+  <!-- saved state icon -->
+  <g transform="translate(905 251)"><rect width="172" height="184" rx="27" fill="#f6faf5"/><path d="M37 48h98M37 84h98M37 120h58" stroke="#63905e" stroke-width="13" stroke-linecap="round"/><circle cx="124" cy="136" r="28" fill="#49d6a9"/><path d="M111 137l9 9 18-22" fill="none" stroke="white" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/></g>
+  <g fill="none" stroke="#5bd9b3" stroke-width="5" stroke-linecap="round"><path d="M369 372h70"/><path d="M760 372h70"/></g>
+  <g fill="#5bd9b3"><circle r="9"><animateMotion dur="2.4s" repeatCount="indefinite" path="M369 372h70"/></circle><circle r="9"><animateMotion dur="2.4s" begin="1.2s" repeatCount="indefinite" path="M760 372h70"/></circle></g>
+</svg>

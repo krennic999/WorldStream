@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 760" role="img" aria-labelledby="t d">
+  <title id="t">Micro Planner city plan</title>
+  <desc id="d">A clean city plan with connected arterial roads, varied blocks, a dense center, residential edges, civic buildings, and green space.</desc>
+  <defs><filter id="s" x="-20%" y="-20%" width="140%" height="140%"><feDropShadow dx="0" dy="10" stdDeviation="12" flood-color="#6f7771" flood-opacity=".13"/></filter></defs>
+  <rect width="1200" height="760" rx="32" fill="#edf1e8"/>
+  <g fill="none" stroke-linecap="square">
+    <path d="M0 240H1200M0 518H1200M375 0V760M830 0V760" stroke="#f9f7f0" stroke-width="92"/>
+    <path d="M0 240H1200M0 518H1200M375 0V760M830 0V760" stroke="#697579" stroke-width="58"/>
+    <path d="M0 240H1200M0 518H1200M375 0V760M830 0V760" stroke="#ead17d" stroke-width="4" stroke-dasharray="27 22"/>
+  </g>
+  <g filter="url(#s)">
+    <rect x="54" y="46" width="253" height="124" rx="20" fill="#d9d0b7"/>
+    <rect x="443" y="46" width="319" height="124" rx="20" fill="#d5cbb1"/>
+    <rect x="898" y="46" width="250" height="124" rx="20" fill="#d9d0b7"/>
+    <rect x="54" y="309" width="253" height="140" rx="20" fill="#d9d0b7"/>
+    <rect x="443" y="309" width="319" height="140" rx="20" fill="#d0c4aa"/>
+    <rect x="898" y="309" width="250" height="140" rx="20" fill="#a8c98d"/>
+    <rect x="54" y="587" width="253" height="125" rx="20" fill="#d9d0b7"/>
+    <rect x="443" y="587" width="319" height="125" rx="20" fill="#d9d0b7"/>
+    <rect x="898" y="587" width="250" height="125" rx="20" fill="#d9d0b7"/>
+  </g>
+  <g fill="#91a5aa">
+    <rect x="78" y="70" width="48" height="76" rx="7"/><rect x="142" y="82" width="63" height="64" rx="7"/><rect x="222" y="67" width="60" height="79" rx="7"/>
+    <rect x="78" y="334" width="64" height="91" rx="7"/><rect x="159" y="347" width="48" height="78" rx="7"/><rect x="223" y="329" width="59" height="96" rx="7"/>
+    <rect x="919" y="611" width="59" height="77" rx="7"/><rect x="993" y="623" width="47" height="65" rx="7"/><rect x="1057" y="604" width="66" height="84" rx="7"/>
+  </g>
+  <g fill="#66858d">
+    <rect x="470" y="66" width="62" height="80" rx="8"/><rect x="551" y="55" width="71" height="91" rx="8"/><rect x="642" y="71" width="89" height="75" rx="8"/>
+    <rect x="469" y="333" width="78" height="92" rx="8"/><rect x="566" y="323" width="64" height="102" rx="8"/><rect x="649" y="340" width="82" height="85" rx="8"/>
+  </g>
+  <g><g fill="#cf8067"><rect x="468" y="610" width="94" height="78" rx="8"/><rect x="581" y="621" width="62" height="67" rx="8"/></g><rect x="666" y="608" width="67" height="80" rx="8" fill="#8ebbc2"/><g fill="#3f7a58"><circle cx="934" cy="340" r="8"/><circle cx="975" cy="370" r="7"/><circle cx="1022" cy="335" r="9"/><circle cx="1071" cy="382" r="8"/><circle cx="1112" cy="344" r="7"/><circle cx="949" cy="411" r="7"/><circle cx="1040" cy="413" r="8"/><circle cx="1092" cy="421" r="7"/></g></g>
+  <g fill="#43d6ad"><path d="M0 228l21 12-21 12z"/><path d="M1200 506l-21 12 21 12z"/><path d="M363 0l12 21 12-21z"/><path d="M818 760l12-21 12 21z"/></g>
+  <circle cx="603" cy="379" r="10" fill="#ff655e" stroke="white" stroke-width="5"/>
+</svg>

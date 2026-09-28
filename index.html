@@ -1,0 +1,189 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="WorldStream plans and expands a persistent 3D world in real time as you move. Edit scenes through language and interact with NPCs that pursue their own activities and respond to you." />
+  <title>WorldStream — 3D worlds, generated as you explore</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 32 32%22><rect width=%2232%22 height=%2232%22 rx=%228%22 fill=%22%2309090b%22/><path d=%22M8 16 16 7l8 9-8 9z%22 fill=%22%2358f4c2%22/></svg>" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="nav" aria-label="Primary navigation">
+    <a class="brand" href="#top"><span class="brand-mark"></span>WORLDSTREAM</a>
+    <nav>
+      <a href="#demo"><svg class="link-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m9 5 11 7-11 7Z"/></svg>Overview</a>
+      <a href="#system">Method</a>
+      <a href="#interaction">Interaction</a>
+      <a href="#worlds">World</a>
+    </nav>
+  </header>
+
+  <main id="top">
+    <section class="hero">
+      <div class="hero-copy">
+        <p class="eyebrow">REAL-TIME WORLD PLANNING</p>
+        <h1>The world unfolds<br />beneath your feet.</h1>
+        <p class="hero-tagline"><strong>3D worlds, generated as you explore.</strong></p>
+        <p class="lede">Plan and generate in real time. Edit with language. Interact with NPCs. Keep every change.</p>
+        <div class="hero-actions"><a class="primary-link" href="#demo"><svg class="link-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m8 5 11 7-11 7Z"/></svg>Watch demo <span aria-hidden="true">↗</span></a><a class="repo-link" href="https://github.com/krennic999/WorldStream" target="_blank" rel="noopener"><svg class="link-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m8 6-6 6 6 6m8-12 6 6-6 6M14 3l-4 18" fill="none" stroke="currentColor" stroke-width="1.8"/></svg>Repository</a></div>
+        <div class="metric-row capability-row" aria-label="Core capabilities">
+          <div><strong>Real-time<br />World Planning</strong></div>
+          <div><strong>Language-guided<br />Editing</strong></div>
+          <div><strong>Stateful<br />NPC Interaction</strong></div>
+          <div><strong>Persistent<br />World State</strong></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="demo" class="demo-section" aria-labelledby="demo-title">
+      <div class="demo-heading"><div><h2 id="demo-title">A world that grows,<br />responds, and persists.</h2></div></div>
+      <video id="tour-video" class="tour-video" controls playsinline preload="none" poster="assets/demo-20260928/city.jpg" aria-label="WorldStream full presentation demo">
+        Your browser does not support embedded video.
+      </video>
+      <div class="video-options">
+        <div class="video-downloads">
+          <a id="download-original" target="_blank" rel="noopener">Open / download 1080p · 189 MB ↗</a>
+        </div>
+      </div>
+      <div class="demo-chapters" role="group" aria-label="Jump to a demo chapter">
+        <button type="button" data-seek="0"><span>00:00</span>City &amp; conversations</button>
+        <button type="button" data-seek="65"><span>01:05</span>Meet the sheep</button>
+        <button type="button" data-seek="100"><span>01:40</span>Across the farmland</button>
+        <button type="button" data-seek="160"><span>02:40</span>Into the forest</button>
+        <button type="button" data-seek="211"><span>03:31</span>Edit the landscape</button>
+        <button type="button" data-seek="263"><span>04:23</span>Coast &amp; helicopter</button>
+        <button type="button" data-seek="298"><span>04:58</span>World persistence</button>
+      </div>
+      <p id="playback-status" class="playback-status" role="status"></p>
+      <div class="demo-footnote"><p>Silent · Presentation edit, not a real-time benchmark.</p></div>
+    </section>
+
+    <section class="statement">
+      <h2>From plan to world.<br /><em>Code and state.</em></h2>
+      <p>Planning and generation run entirely on <strong>code and structured state.</strong> <strong>No visual inputs or intermediates.</strong></p>
+    </section>
+
+    <section id="system" class="system-section">
+      <div class="section-heading">
+        <p class="eyebrow">HIERARCHICAL PLANNING</p>
+        <h2>Plan far away.<br />Resolve nearby.</h2>
+        <p>Plan regions ahead. Generate detail nearby. Build playable scenes that retain their state.</p>
+      </div>
+      <div class="planning-showcase">
+        <div class="planning-toolbar">
+          <button id="replay-planning" type="button"><span aria-hidden="true">▶</span> Replay planning</button>
+        </div>
+        <figure class="tile-planning-demo">
+          <img id="tile-planning-animation" src="assets/tile-planning-demo.svg" alt="Animation showing Macro Planner assigning roles to a five by five region and Micro Planner resolving a nearby tile into four zones" />
+        </figure>
+      </div>
+
+      <div class="pipeline" role="img" aria-label="Macro Planner plans a large region, Micro Planner refines nearby tiles, then local code compiles a persistent world">
+        <article class="stage macro-stage">
+          <div class="stage-index">01</div>
+          <div>
+            <p class="stage-label">MACRO PLANNER · REGION</p>
+            <h3>Shape the world</h3>
+            <p>Connect terrain, settlements, and roads across regions.</p>
+          </div>
+          <figure class="stage-real">
+            <img data-planning-graphic src="assets/macro-layout.svg" alt="A simplified Macro Planner natural map with ocean, mountains, rivers, forests, desert, settlements, and the next planning frontier" />
+          </figure>
+        </article>
+
+        <div class="flow-arrow" aria-hidden="true">↓</div>
+
+        <article class="stage micro-stage">
+          <div class="stage-index">02</div>
+          <div>
+            <p class="stage-label">MICRO PLANNER · TILE</p>
+            <h3>Decide the detail</h3>
+            <p>Choose streets, buildings, vegetation, and actors as you approach.</p>
+          </div>
+          <figure class="stage-real">
+            <img data-planning-graphic src="assets/micro-city-layout.svg" alt="A city-scale Micro Planner plan abstracted from a generated aerial view, with dense blocks, arterials, local streets, civic facilities, parks, and edge connections" />
+          </figure>
+        </article>
+
+        <div class="flow-arrow" aria-hidden="true">↓</div>
+
+        <article class="stage compiler-stage">
+          <div class="stage-index">03</div>
+          <div>
+            <p class="stage-label">LOCAL CODE</p>
+            <h3>Build and remember</h3>
+            <p>Compile a playable scene. Preserve object identities, layout, and edits.</p>
+          </div>
+          <figure class="stage-real stage-code-real">
+            <img data-planning-graphic src="assets/local-compiler.svg" alt="A simple animated flow from a planner output through local scene generation to a saved playable tile" />
+          </figure>
+        </article>
+      </div>
+    </section>
+
+    <section id="worlds" class="worlds">
+      <div class="worlds-copy">
+        <h2>One world.<br />Diverse landscapes.</h2>
+        <p>Explore cities, farmland, forests, deserts, and coasts on <strong>one continuous map</strong>, planned in real time as you move.</p>
+      </div>
+      <div class="biome-showcase">
+        <div class="landscape-thumbnails" aria-label="Five landscapes in one world">
+          <figure><img src="assets/demo-20260928/city.jpg" loading="lazy" width="1600" height="900" alt="City blocks and a paved intersection" /><figcaption>City</figcaption></figure>
+          <figure><img src="assets/demo-20260928/farmland.jpg?v=3" loading="lazy" width="1600" height="900" alt="A rural house beside planted crop fields and a dirt road" /><figcaption>Farmland</figcaption></figure>
+          <figure><img src="assets/demo-20260928/forest.jpg?v=2" loading="lazy" width="1600" height="900" alt="An open view through layered trees and forest canopy" /><figcaption>Forest</figcaption></figure>
+          <figure><img src="assets/demo-20260928/desert.jpg?v=2" loading="lazy" width="1600" height="900" alt="Cacti and boulders on sandy desert terrain" /><figcaption>Desert</figcaption></figure>
+          <figure><img src="assets/demo-20260928/coast.jpg?v=2" loading="lazy" width="1600" height="900" alt="Boats on the sea beside a palm-lined beach" /><figcaption>Coast</figcaption></figure>
+        </div>
+        <div class="revisit-note"><button class="chapter-link" type="button" data-seek="298">World persistence in action ↗</button></div>
+      </div>
+    </section>
+
+    <section id="interaction" class="interaction-section">
+      <div class="section-heading interaction-heading">
+        <p class="eyebrow">LANGUAGE-GUIDED EDITING</p>
+        <h2>Change the landscape.</h2>
+        <p>Ask for a forest and water channel in the desert. Watch the landscape update beside the trail.</p>
+      </div>
+
+      <div class="edit-showcase">
+        <figure class="excerpt-media"><video id="edit-video" controls playsinline preload="none" poster="assets/demo-20260928/edit-before.jpg" aria-label="24-second excerpt showing the landscape edit request and result; water loop partly outside the view"></video></figure>
+      </div>
+    </section>
+
+    <section class="npc-section">
+      <div class="npc-copy">
+        <p class="eyebrow">STATEFUL NPC INTERACTION</p>
+        <h2>Meet the inhabitants.</h2>
+        <p>NPCs go about their day and respond to you. Ask for directions, call a sheep, or offer it food.</p>
+        <button class="npc-lab-link chapter-link" type="button" data-seek="4">Watch the city conversation ↗</button>
+      </div>
+
+      <figure class="npc-media fullbleed-media">
+        <video id="npc-video" controls playsinline preload="none" poster="assets/demo-20260928/sheep.jpg" aria-label="Calling and feeding a sheep in the world"></video>
+      </figure>
+    </section>
+
+    <section class="latency-section" aria-labelledby="latency-title">
+      <div>
+        <p class="eyebrow">RESPONSE TO VISIBLE CONTENT</p>
+        <h2 id="latency-title">From plan<br />to scene.</h2>
+        <p class="latency-note">With <a href="https://typesafe.ai/" target="_blank" rel="noopener">Jev</a> as planner, estimated response time drops to <strong>~0.7 seconds</strong>, compared with ~30 seconds for Claude.</p>
+      </div>
+      <div class="latency-chart" aria-label="Estimated warm-cache latency from four repeat saved-response replay trials">
+        <div class="latency-bar"><b>planner response</b><strong>0.70 s</strong></div>
+        <div class="latency-bar"><b>Post-response processing + rendering</b><strong>1.60 s</strong></div>
+        <div class="latency-bar"><b>Estimated total</b><strong>2.30 s</strong></div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer>
+    <span>WORLDSTREAM · 2026</span>
+    <a class="footer-link" href="#top">Back to top ↑</a>
+  </footer>
+  <script src="media-config.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
