@@ -13,7 +13,7 @@
 </p>
 
 <p align="center">
-  <strong>🌍 Real-time Planning &nbsp; · &nbsp; ✏️ Language-guided Editing &nbsp; · &nbsp; 💬 Stateful NPCs &nbsp; · &nbsp; 🧠 Persistent State</strong>
+  <strong>🌍 Infinite Exploration &nbsp; · &nbsp; 🌊 Streaming Generation &nbsp; · &nbsp; ✏️ Dynamic Editing &nbsp; · &nbsp; 🧠 Persistent State</strong>
 </p>
 
 ---
@@ -22,7 +22,7 @@
 
 **3D worlds, generated as you explore.**
 
-WorldStream plans and generates explorable 3D worlds in real time. Edit landscapes with language, interact with NPCs, and revisit places that preserve your changes.
+WorldStream is designed for **infinite exploration**: regions are planned and generated on demand as you move through a continuously expanding 3D world. **Edit existing scenes and shape upcoming regions through language**, interact with NPCs, and revisit places that preserve your changes.
 
 <p align="center">
   <a href="https://krennic999.github.io/WorldStream/#demo">
@@ -34,12 +34,12 @@ WorldStream plans and generates explorable 3D worlds in real time. Edit landscap
 
 ## ✨ What makes it interactive?
 
-Change landscapes through language. Talk to residents, call and feed animals, and return to a world that remembers your edits.
+The world streams and changes as you explore. Modify the current landscape, specify what should appear next, talk to residents, and return to places that retain your edits.
 
 | | Capability |
 | --- | --- |
-| 🧭 **Plan as you move** | Plan regional structure ahead of the player; resolve local detail on approach. |
-| ✏️ **Edit with language** | Add a forest and water channel to a desert through a natural-language request. |
+| 🧭 **Stream as you explore** | Plan new regions ahead of the player and generate local detail on approach. |
+| ✏️ **Edit dynamically** | Change existing scenes or guide the content of upcoming regions through natural language. |
 | 💬 **Meet the inhabitants** | Ask residents for directions; call and feed animals that carry their own state and activities. |
 | 🧠 **Keep the world** | Preserve object identities, layouts, and edits as distant geometry unloads. |
 

@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="description" content="How WorldStream combines knowledge-guided Macro and Micro planning, local procedural generation, dynamic prefetch, and persistent interaction." />
+  <meta name="description" content="How WorldStream combines streaming world generation, dynamic language-guided editing, and persistent state in an architecture designed for infinite exploration." />
   <meta name="theme-color" content="#f7f7f2" />
   <title>WorldStream: Building 3D Worlds as You Explore</title>
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpath d='m16 2 14 14-14 14L2 16Z' fill='%23177559'/%3E%3C/svg%3E" />
@@ -22,7 +22,7 @@
     <header class="article-header">
       <p class="eyebrow">SYSTEM DESIGN <span aria-hidden="true">/</span> 01</p>
       <h1>WorldStream: Building 3D Worlds<br class="desktop-break" /> <em>as You Explore</em></h1>
-      <p class="standfirst">Hierarchical planning, procedural generation,<br class="desktop-break" /> and persistent state.</p>
+      <p class="standfirst">Streaming world generation, dynamic editing,<br class="desktop-break" /> and persistent state.</p>
       <p class="article-meta"><time datetime="2026-09-29">September 29, 2026</time><span aria-hidden="true">·</span><span>WorldStream</span><span aria-hidden="true">·</span><span id="reading-time">18 min read</span></p>
     </header>
 
@@ -53,12 +53,12 @@
           <p>Consider a player who takes an unplanned route out of a city, asks a resident for directions, and requests a forest in the next unexplored area. Later, they return to the city and the places they changed. Supporting this experience requires more than generating each new view: the system must extend a connected environment, interpret new intent during exploration, and retain what has already happened.</p>
           <p>Three requirements follow:</p>
           <ol class="research-questions">
-            <li><strong>Unbounded exploration.</strong> Extend the world on demand without specifying the complete map or the player’s route in advance.</li>
-            <li><strong>Open-ended, low-latency interaction.</strong> Ground natural-language requests in the current world and apply them to existing or future content.</li>
+            <li><strong>Infinite exploration.</strong> Extend the world on demand without specifying the complete map or the player’s route in advance.</li>
+            <li><strong>Dynamic, language-guided interaction.</strong> Respond to open-ended requests with low latency, editing existing scenes or shaping the content of upcoming regions as exploration continues.</li>
             <li><strong>Arbitrarily repeated revisits.</strong> Preserve spatial identity and accepted edits while keeping active rendering memory bounded.</li>
           </ol>
           <p>Together, these requirements suggest a separation of responsibilities. Semantic planning determines what should exist and how it connects to its surroundings. Local generation builds the spatial detail as it becomes relevant. Persistent state retains accepted plans and changes independently of the geometry currently loaded into the renderer.</p>
-          <p><strong>WorldStream connects low-latency language planning with on-demand generation and persistent world state.</strong> Its hierarchical planner uses geographic and ecological knowledge to organize regions and local neighborhoods; procedural algorithms realize those decisions, and a movement-aware scheduler prepares content ahead of the player. This supports real-time tile generation, language-guided interaction, and an architecture that can, in principle, extend beyond a fixed scene boundary.</p>
+          <p><strong>WorldStream connects streaming world generation, dynamic language-guided editing, and persistent state.</strong> Its hierarchical planner uses geographic and ecological knowledge to organize regions and local neighborhoods; procedural algorithms realize those decisions, and a movement-aware scheduler prepares content ahead of the player. Users can modify the current scene or steer future generation while exploring. This architecture can, in principle, keep extending beyond a fixed scene boundary.</p>
           <p>The demo below shows this design in action. The following sections explain the planning, generation, scheduling, and interaction mechanisms behind it.</p>
           <figure id="demo" class="wide-figure demo-figure">
             <video controls playsinline preload="none" poster="../assets/demo-20260928/city.jpg" aria-label="Full WorldStream presentation: exploration, landscape editing, NPC interactions, and return to the city">
@@ -221,7 +221,7 @@
             <aside class="citation-note" aria-label="References 4 and 5"><div class="note-entry" id="ref-worldplay"><span class="citation-number">[4]</span> Sun et al., 2025<a href="https://arxiv.org/abs/2512.14614" target="_blank" rel="noopener">WorldPlay</a></div><div class="note-entry" id="ref-programmable"><span class="citation-number">[5]</span> Huang et al., 2026<a href="https://arxiv.org/abs/2609.10540" target="_blank" rel="noopener">Programmable World Model</a></div></aside>
           </div>
           <div class="citation-context">
-            <p><strong>A higher-fidelity explicit 3D world.</strong> The current prototype focuses on planning and interaction; its local generators and assets can be upgraded. More capable 3D generation and refinement methods <a class="citation" href="#ref-worldclaw">[6]</a><a class="citation" href="#ref-rcwm">[7]</a>, combined with prefetch and caching, could prepare detailed content ahead of arrival and reuse it across visits. This offers a path toward high-quality 3D world models with, in principle, unbounded maps and open-ended exploration.</p>
+            <p><strong>A higher-fidelity explicit 3D world.</strong> The current prototype focuses on planning and interaction; its local generators and assets can be upgraded. More capable 3D generation and refinement methods <a class="citation" href="#ref-worldclaw">[6]</a><a class="citation" href="#ref-rcwm">[7]</a>, combined with prefetch and caching, could prepare detailed content ahead of arrival and reuse it across visits. This offers a path toward high-quality 3D world models with, in principle, infinite map expansion and open-ended exploration.</p>
             <aside class="citation-note" aria-label="References 6 and 7"><div class="note-entry" id="ref-worldclaw"><span class="citation-number">[6]</span> Guo et al., 2026<a href="https://arxiv.org/abs/2608.05248" target="_blank" rel="noopener">WorldClaw</a></div><div class="note-entry" id="ref-rcwm"><span class="citation-number">[7]</span> Li et al., 2026<a href="https://arxiv.org/abs/2609.11499" target="_blank" rel="noopener">Recursive Code World Models</a></div></aside>
           </div>
           <div class="closing-links"><a href="../index.html">Explore the project <span aria-hidden="true">↗</span></a><a href="../index.html#demo">Watch the full demo <span aria-hidden="true">↗</span></a></div>
@@ -230,7 +230,7 @@
         <footer class="article-footer">
           <p class="eyebrow">ACKNOWLEDGMENTS</p>
           <p>Planning and semantic decisions use <a href="https://typesafe.ai/" target="_blank" rel="noopener">Jev from TypeSafe</a>. WorldStream supplies the world representation, local generators, and runtime integration. Illustrative 3D figures are reused from our technical report; screenshots and video are from the prototype.</p>
-          <p class="draft-footnote">Last updated September 29, 2026</p>
+          <p class="draft-footnote">Last updated September 30, 2026</p>
         </footer>
       </article>
     </div>
