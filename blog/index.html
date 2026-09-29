@@ -1,0 +1,240 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="How WorldStream combines knowledge-guided Macro and Micro planning, local procedural generation, dynamic prefetch, and persistent interaction." />
+  <meta name="theme-color" content="#f7f7f2" />
+  <title>WorldStream: Building 3D Worlds as You Explore</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpath d='m16 2 14 14-14 14L2 16Z' fill='%23177559'/%3E%3C/svg%3E" />
+  <link rel="stylesheet" href="blog.css?v=20260929-polish" />
+  <script src="blog.js?v=20260929-polish" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#article">Skip to article</a>
+  <header class="site-nav">
+    <a class="wordmark" href="../index.html"><span aria-hidden="true">◆</span> WORLDSTREAM</a>
+    <div class="nav-links"><a href="../index.html">Project page <span aria-hidden="true">↗</span></a><a href="https://github.com/krennic999/WorldStream" target="_blank" rel="noopener">GitHub <span aria-hidden="true">↗</span></a></div>
+  </header>
+  <div class="reading-progress" aria-hidden="true"><span id="reading-progress"></span></div>
+
+  <main id="top">
+    <header class="article-header">
+      <p class="eyebrow">SYSTEM DESIGN <span aria-hidden="true">/</span> 01</p>
+      <h1>WorldStream: Building 3D Worlds<br class="desktop-break" /> <em>as You Explore</em></h1>
+      <p class="standfirst">Hierarchical planning, procedural generation,<br class="desktop-break" /> and persistent state.</p>
+      <p class="article-meta"><time datetime="2026-09-29">September 29, 2026</time><span aria-hidden="true">·</span><span>WorldStream</span><span aria-hidden="true">·</span><span id="reading-time">18 min read</span></p>
+    </header>
+
+    <figure class="hero-figure">
+      <img src="../assets/demo-cover.jpg" width="1800" height="510" alt="City, farmland, forest, desert, and coast from the WorldStream demo, joined in a five-panel panorama." fetchpriority="high" />
+      <figcaption><span class="figure-index">01</span> Different landscapes, one continuous map. Frames from the WorldStream prototype.</figcaption>
+    </figure>
+
+    <div class="article-layout">
+      <aside class="contents" aria-label="Article navigation">
+        <p class="contents-label">IN THIS ARTICLE</p>
+        <nav>
+          <a href="#a-world-to-return-to" aria-current="location">Overview</a>
+          <a href="#state">System overview</a>
+          <a href="#planning">Macro &amp; Micro planning</a>
+          <a href="#compilation">Local generation</a>
+          <a href="#streaming">Dynamic scheduling</a>
+          <a href="#interaction">Interaction design</a>
+          <a href="#latency">Responsiveness</a>
+          <a href="#world-models">Outlook</a>
+        </nav>
+        <a class="contents-demo" href="#demo">Watch the demo <span aria-hidden="true">↗</span></a>
+      </aside>
+
+      <article id="article" class="prose">
+        <section id="a-world-to-return-to" data-section>
+          <p class="opening">An open world should not end at the boundary of the scene that has already been generated. A player should be able to keep exploring, change the world through language, and return to earlier places as often as they choose.</p>
+          <p>Consider a player who takes an unplanned route out of a city, asks a resident for directions, and requests a forest in the next unexplored area. Later, they return to the city and the places they changed. Supporting this experience requires more than generating each new view: the system must extend a connected environment, interpret new intent during exploration, and retain what has already happened.</p>
+          <p>Three requirements follow:</p>
+          <ol class="research-questions">
+            <li><strong>Unbounded exploration.</strong> Extend the world on demand without specifying the complete map or the player’s route in advance.</li>
+            <li><strong>Open-ended, low-latency interaction.</strong> Ground natural-language requests in the current world and apply them to existing or future content.</li>
+            <li><strong>Arbitrarily repeated revisits.</strong> Preserve spatial identity and accepted edits while keeping active rendering memory bounded.</li>
+          </ol>
+          <p>Together, these requirements suggest a separation of responsibilities. Semantic planning determines what should exist and how it connects to its surroundings. Local generation builds the spatial detail as it becomes relevant. Persistent state retains accepted plans and changes independently of the geometry currently loaded into the renderer.</p>
+          <p><strong>WorldStream connects low-latency language planning with on-demand generation and persistent world state.</strong> Its hierarchical planner uses geographic and ecological knowledge to organize regions and local neighborhoods; procedural algorithms realize those decisions, and a movement-aware scheduler prepares content ahead of the player. This supports real-time tile generation, language-guided interaction, and an architecture that can, in principle, extend beyond a fixed scene boundary.</p>
+          <p>The demo below shows this design in action. The following sections explain the planning, generation, scheduling, and interaction mechanisms behind it.</p>
+          <figure id="demo" class="wide-figure demo-figure">
+            <video controls playsinline preload="none" poster="../assets/demo-20260928/city.jpg" aria-label="Full WorldStream presentation: exploration, landscape editing, NPC interactions, and return to the city">
+              <source src="https://echovideo.jd.cn/jev-world/deliverables/demo-video-final-20260928/tour-presentation-edited-1080p.mp4" type="video/mp4" />
+              <a href="https://echovideo.jd.cn/jev-world/deliverables/demo-video-final-20260928/tour-presentation-edited-1080p.mp4">Open the full demo</a>
+            </video>
+            <figcaption><span class="figure-index">02</span> The prototype in motion. A 5:17 presentation edit, with no audio. The clip demonstrates behavior; it is not a continuous latency benchmark. <a href="../index.html#demo">Browse the chapters ↗</a></figcaption>
+          </figure>
+        </section>
+
+
+        <section id="state" data-section>
+          <p class="section-number">01 / SYSTEM OVERVIEW</p>
+          <h2>A planner, a generator,<br />and a persistent world.</h2>
+          <p>WorldStream separates three questions: <strong>what should exist, how it should be built, and when it is needed.</strong> The planner answers the first through hierarchical decisions. Local procedural algorithms answer the second. A movement-aware scheduler coordinates both around the player.</p>
+          <div class="design-overview">
+            <div><span>PLAN</span><h3>Semantic decisions</h3><p>Regional layout, land use, city density, vegetation communities, and requested changes.</p></div>
+            <div><span>GENERATE</span><h3>Spatial realization</h3><p>Terrain, road networks, building placements, individual plants, and executable actions.</p></div>
+            <div><span>RETAIN</span><h3>Persistent state</h3><p>Accepted plans, object identities, generation parameters, and user edits.</p></div>
+          </div>
+          <p>All three operate on structured world state. The planner receives scene facts and returns semantic decisions; it does not need to inspect the rendered image. The renderer turns the resulting geometry and assets into pixels. This representation lets the same world support generation, interaction, and revisits.</p>
+          <p>For example, “a sparse woodland belt between a village and a forest” is a planning decision. The exact position, species, scale, and orientation of each tree are local generation decisions. Saving the accepted plan and its realization makes the woodland part of a place the player can return to.</p>
+        </section>
+
+        <section id="planning" data-section>
+          <p class="section-number">02 / HIERARCHICAL PLANNING</p>
+          <h2>Macro plans the region.<br />Micro resolves the neighborhood.</h2>
+          <p>A coherent world needs decisions at more than one scale. A local tile should fit into a larger settlement or landscape, while still containing useful detail. The <strong>Macro Planner</strong> establishes regional structure, and the <strong>Micro Planner</strong> refines nearby tiles within that structure. The current implementation uses <a href="https://typesafe.ai/" target="_blank" rel="noopener">Jev from TypeSafe</a> for both planning roles.</p>
+          <h3>Macro Planner: regional relationships</h3>
+          <p>Macro considers a region of tiles—5 × 5 in the inspected planner—and decides its broad organization. Its inputs include terrain and water evidence, neighboring regional plans, and geographical rules. Its output describes settlement patterns, ecological cover, major road corridors, and transitions between land uses.</p>
+          <p>A region might contain clustered villages linked by a main road, fields around the settlements, and woodland becoming denser toward the hills. Macro gives the local tiles a shared direction, so each tile does not independently invent an unrelated scene.</p>
+          <h3>Micro Planner: local structure and density</h3>
+          <p>Micro receives the parent plan, local terrain, neighboring roads and zones, and available generation capabilities. It decides what belongs in a nearby tile: the local land-use mix, building or vegetation density, streetscape, and community structure. A two-by-two subdivision allows mixed content, such as housing beside a park or farmland meeting a forest edge.</p>
+          <figure class="wide-figure report-planning">
+            <div class="report-pair">
+              <div><span>Macro · regional organization</span><img src="assets/macro-jev-3d.png" width="1600" height="1000" loading="lazy" alt="Report illustration of a region containing mountains, a river, woodland, farmland, and a connecting road." /></div>
+              <div><span>Micro · local organization</span><img src="assets/micro-jev-3d.png" width="1600" height="1000" loading="lazy" alt="Report illustration of a city neighborhood with building groups, connecting streets, and open space." /></div>
+            </div>
+            <figcaption><span class="figure-index">03</span> The two planning scales, illustrated with figures from our technical report.</figcaption>
+          </figure>
+          <div class="plan-examples">
+            <div><p class="diagram-kicker">EXAMPLE MACRO OUTPUT</p><dl><dt>Settlement</dt><dd>Suburb-to-core gradient</dd><dt>Ecology</dt><dd>Woodland patches</dd><dt>Main connection</dt><dd>Coastal road corridor</dd><dt>Water</dt><dd>River corridor</dd></dl></div>
+            <div><p class="diagram-kicker">EXAMPLE MICRO OUTPUT</p><dl><dt>Local content</dt><dd>Mixed-use city blocks</dd><dt>Density</dt><dd>Dense</dd><dt>Structure</dt><dd>Irregular blocks</dd><dt>Streetscape</dt><dd>Tree-lined avenues</dd></dl></div>
+          </div>
+          <p class="diagram-caption">Illustrative summaries of the decisions at each level. Actual requests and responses use typed fields and allowed choices.</p>
+          <h3>Knowledge and capabilities are part of the input</h3>
+          <p>The planner receives three complementary kinds of context. <strong>World facts</strong> describe the actual terrain, water, existing objects, and neighboring connections. <strong>Domain knowledge</strong> describes plausible settlement and ecological relationships. <strong>Capability descriptions</strong> tell the planner what the local generators and action modules can execute.</p>
+          <p>We organize geographic, hydrological, and ecological knowledge into structured planning priors. Combined with local terrain evidence, these priors guide the relationships among landforms, water, vegetation, and human settlement. They include:</p>
+          <ul class="planning-priors">
+            <li>Considering terrain suitability and road access when selecting settlement locations.</li>
+            <li>Aligning riparian and wetland vegetation with actual riverbanks and water margins.</li>
+            <li>Conditioning forest composition and structure on moisture, elevation, and slope.</li>
+            <li>Connecting rural areas to forests through gradual changes in tree density and canopy structure, such as a sparse woodland belt at the village edge.</li>
+          </ul>
+          <p>Micro also chooses among compact capability cards for settlement blocks, natural landscape mosaics, and transition regions. These are descriptions of executable generation families. The model selects an appropriate family and its parameters; local code implements the result.</p>
+        </section>
+
+        <section id="compilation" data-section>
+          <p class="section-number">03 / LOCAL GENERATION</p>
+          <h2>The planner sets the structure.<br />Local algorithms place the detail.</h2>
+          <div class="citation-context">
+            <p>The planner specifies city density or vegetation-community density at a useful semantic scale. It does not enumerate every building, plant, or road segment. Procedural algorithms turn those decisions into geometry and object placements <a class="citation" href="#ref-pcg">[1]</a>.</p>
+            <aside class="citation-note" id="ref-pcg" aria-label="Reference 1"><span class="citation-number">[1]</span> <span>Shaker et al., 2016</span><a href="https://doi.org/10.1007/978-3-319-42716-4" target="_blank" rel="noopener">Procedural Content Generation in Games</a></aside>
+          </div>
+          <p>For cities, local generation connects the planned road entries, constructs a street network within the regional layout, allocates building space, and places compatible assets at the requested density and height range. For natural areas, it realizes the selected community as tree groups, clearings, edge vegetation, and ground detail.</p>
+          <figure class="wide-figure generator-gallery">
+            <div><img src="assets/local-city-3d.png" width="1600" height="1000" loading="lazy" alt="Procedural city illustration from the technical report." /><p><b>City</b><span>Density and road structure → blocks and buildings</span></p></div>
+            <div><img src="assets/local-rural-3d.png" width="1600" height="1000" loading="lazy" alt="Procedural rural landscape illustration from the technical report." /><p><b>Rural</b><span>Settlement pattern → houses, fields, and access paths</span></p></div>
+            <div><img src="assets/local-forest-3d.png" width="1600" height="1000" loading="lazy" alt="Procedural forest illustration with tree clusters and a path." /><p><b>Forest</b><span>Community and abundance → trees, gaps, and edges</span></p></div>
+            <div><img src="assets/local-desert-3d.png" width="1600" height="1000" loading="lazy" alt="Procedural desert illustration with terrain, rocks, and sparse vegetation." /><p><b>Desert</b><span>Terrain and ecology → relief, rocks, and sparse cover</span></p></div>
+            <figcaption><span class="figure-index">04</span> Local generation families illustrated in the technical report. Each expands a compact plan into a spatial arrangement.</figcaption>
+          </figure>
+          <h3>Controlled variation</h3>
+          <div class="citation-context">
+            <p>Randomness supplies variation within the plan. A forest generator can use spatially coherent fields to produce dense stands and open gaps, then sample individual trees with spacing constraints. A sparse woodland edge and a closed canopy use different distributions, even when they share the same asset library. Related spatial sampling methods provide useful background for controlling object spacing <a class="citation" href="#ref-bridson">[2]</a>.</p>
+            <aside class="citation-note" id="ref-bridson" aria-label="Reference 2"><span class="citation-number">[2]</span> <span>Bridson, 2007</span><a href="https://doi.org/10.1145/1278780.1278807" target="_blank" rel="noopener">Fast Poisson disk sampling in arbitrary dimensions</a></aside>
+          </div>
+          <p>Generation uses stable seeds, so variation is repeatable for the same stored plan and compatible generator version. The player encounters a particular arrangement of trees and buildings, not a fresh random arrangement every time the renderer loads the area.</p>
+          <h3>Geometric feasibility</h3>
+          <p>Before content is accepted, local checks test whether it fits the actual world. Buildings need usable ground and road access. Vegetation must respect water, slope, and occupied space. Road connections must agree with neighboring tiles. Scene edits must fit their permitted region and preserve protected paths and objects.</p>
+          <p>This separates two kinds of reasoning: geographical knowledge helps the planner choose a plausible place, while local geometry checks determine whether that choice can be built at the proposed location.</p>
+        </section>
+
+        <section id="streaming" data-section>
+          <p class="section-number">04 / DYNAMIC SCHEDULING</p>
+          <h2>Generate where the player<br />is going next.</h2>
+          <p>The scheduler maintains a moving neighborhood around the player instead of treating the entire map as equally urgent. It distinguishes the <strong>required near field</strong>, a <strong>preferred buffer</strong>, and a farther <strong>prefetch region</strong>. Nearby tiles need usable geometry; more distant tiles may need only a plan.</p>
+          <p>One way to visualize this is a 3 × 3 required neighborhood, a 4 × 4 preferred window extending toward movement, and a prefetch corridor farther ahead. These sizes illustrate the roles of the windows; the policy controls their sizes and planning and compilation horizons separately. They are distinct from the larger regions used by the Macro Planner.</p>
+          <figure class="scheduler-figure wide-figure">
+            <div class="scheduler-heading"><div><span class="diagram-kicker">DIRECTION-AWARE PRIORITY</span><h3>Near field first. Prefetch ahead.</h3></div><span class="schematic-label">Illustrative windows</span></div>
+            <div class="direction-controls" role="group" aria-label="Choose the player's movement direction"><button type="button" data-direction="north" aria-pressed="false">↑ North</button><button type="button" data-direction="east" aria-pressed="true">→ East</button><button type="button" data-direction="south" aria-pressed="false">↓ South</button><button type="button" data-direction="west" aria-pressed="false">← West</button></div>
+            <div class="scheduler-body">
+              <div id="schedule-grid" class="schedule-grid" role="img" aria-label="The player moves east; a 3 by 3 required region is surrounded by a 4 by 4 preferred window, with prefetch farther east."></div>
+              <div class="scheduler-explanation"><p class="scheduler-status" id="schedule-heading">Moving east</p><ul class="schedule-legend"><li><i class="legend-required"></i><span><b>Required · 3 × 3</b>Fill missing nearby content first</span></li><li><i class="legend-preferred"></i><span><b>Preferred · 4 × 4</b>Prepare the next local neighborhood</span></li><li><i class="legend-prefetch"></i><span><b>Prefetch corridor</b>Plan farther along the likely route</span></li></ul><p id="schedule-description">Turning changes which future tiles are prioritized. Already accepted world state is retained.</p></div>
+            </div>
+            <figcaption><span class="figure-index">05</span> Change direction to see the planning emphasis move. This schematic illustrates the scheduling policy, not a live generation trace.</figcaption>
+          </figure>
+          <h3>Priority follows movement and readiness</h3>
+          <p>At each update, the scheduler uses player position, movement direction, speed, camera direction, and tile readiness to reprioritize work. Missing content under or immediately around the player comes first. Tiles expected to be entered soon receive higher priority than equally distant tiles behind the player. When the player turns, the predicted corridor moves with them.</p>
+          <p>Planning reaches farther ahead than compilation. Macro prepares regional context, Micro resolves local plans, and the compiler builds geometry closer to when it is needed. This ordering spreads work over time while avoiding the cost of fully constructing every distant region.</p>
+          <p>The scheduler also reuses completed plans, merges duplicate requests, and limits concurrent model calls. An area that is already planned needs construction work, not another planning request. Obsolete speculative work can be deprioritized without discarding accepted world content.</p>
+          <h3>Rendering memory and world memory are separate</h3>
+          <p>Distant geometry can leave the renderer while its plan, object identities, and edits remain stored. Revisiting a region reloads or reconstructs that saved state. Active rendering memory therefore follows the current neighborhood, while persistent storage grows with explored and modified content.</p>
+          <figure class="lifecycle wide-figure">
+            <div class="lifecycle-heading"><div><span class="diagram-kicker">TILE LIFECYCLE</span><h3>Persistent records, transient render resources.</h3></div><span class="schematic-label">Interactive schematic</span></div>
+            <div class="lifecycle-controls" role="group" aria-label="Select a tile lifecycle stage">
+              <button type="button" data-phase="0" aria-pressed="true">01 · Approach</button>
+              <button type="button" data-phase="1" aria-pressed="false">02 · Leave</button>
+              <button type="button" data-phase="2" aria-pressed="false">03 · Return</button>
+            </div>
+            <div class="lifecycle-scene" data-phase="0">
+              <div class="tile-schematic" aria-hidden="true"><div class="tile-ground"><span class="tile-road"></span><span class="tile-house house-one"></span><span class="tile-house house-two"></span><span class="tile-tree tree-one"></span><span class="tile-tree tree-two"></span><span class="tile-tree tree-three"></span><span class="tile-player">●</span></div></div>
+              <div class="lifecycle-copy" aria-live="polite"><p class="saved-badge"><span aria-hidden="true">●</span> World state retained</p><h4 id="phase-title">Build from the accepted plan.</h4><p id="phase-description">The nearby tile becomes renderable. Its plan, object identities, and generation parameters are stored independently of its meshes.</p></div>
+            </div>
+            <figcaption><span class="figure-index">06</span> Approach: build from saved state. Leave: release distant geometry. Return: rebuild from the same state and retained edits. The controls illustrate this lifecycle, not a live model call.</figcaption>
+          </figure>
+        </section>
+
+        <section id="interaction" data-section>
+          <p class="section-number">05 / INTERACTION DESIGN</p>
+          <h2>The planner selects intent.<br />Local capabilities execute it.</h2>
+          <p>The planner accepts open-ended natural-language input, allowing users to express questions, preferences, and intended changes in their own words, without following a fixed command format or including specific trigger keywords. It interprets the meaning of the request together with the current world context to identify the relevant objects, select a supported capability, and determine its parameters. This gives the world a language-based interface for understanding user intent and translating it into executable behavior.</p>
+          <p>Generation and interaction use the same division of responsibility. A request such as “where is the hospital?” requires intent understanding, but the answer must use the hospital that actually exists in the world. The planner selects the action and target; local code retrieves its position, calculates direction and distance, and presents the result.</p>
+          <div class="action-flow" role="img" aria-label="World context and user intent go to the planner; it chooses a capability, target, and parameters; local modules execute the change and update world state."><span><small>INPUT</small>Instruction + world context</span><b aria-hidden="true">→</b><span><small>PLANNER</small>Capability + target + parameters</span><b aria-hidden="true">→</b><span><small>RUNTIME</small>Validate, execute, update state</span></div>
+          <p>The same structure covers different behaviors. Feeding a sheep selects an actor and feeding action. Calling it closer invokes local movement and collision handling. A helicopter request chooses a spawn and approach plan, while the flight controller handles motion. The model is making a decision over available capabilities, rather than generating animation or physics code.</p>
+          <div class="table-scroll method-table capability-table"><table><caption>A shared capability interface over specialized execution modules</caption><thead><tr><th scope="col">Capability</th><th scope="col">What the planner decides</th><th scope="col">What local code does</th></tr></thead><tbody>
+            <tr><th scope="row"><code>locate_object</code></th><td>Which existing target the user means</td><td>Query position and calculate a grounded answer</td></tr>
+            <tr><th scope="row"><code>interact_with_npc</code></th><td>Actor and supported action</td><td>Run animation, navigation, and state updates</td></tr>
+            <tr><th scope="row"><code>spawn_and_move_entity</code></th><td>Entity, origin, and approach behavior</td><td>Load the asset and execute movement</td></tr>
+            <tr><th scope="row"><code>set_future_region_intent</code></th><td>Upcoming region and desired content</td><td>Store the intent for subsequent planning</td></tr>
+            <tr><th scope="row"><code>edit_region</code></th><td>Region, size, zones, and spatial relationships</td><td>Generate and attach the edited scene</td></tr>
+          </tbody></table></div>
+          <p>The names above summarize the existing capability families at an abstract interface level. Each capability involves more detailed execution logic for target resolution, movement, animation, geometry, and validation. Scene objects carry persistent identities and mutable state. Interactions invoke the corresponding behavior functions to update that state—for example, assigning an NPC a movement target, changing its activity to feeding, or updating an entity’s position. The runtime then realizes those state changes through the appropriate controllers and rendering updates.</p>
+          <h3>Editing a place versus specifying what comes next</h3>
+          <p>An instruction can target either existing content or future generation. “Put a grove beside this trail” changes a local region that is already present. “Make the next area a forest” adds a semantic constraint to an upcoming region, which is then processed through normal Micro planning and local generation.</p>
+          <p>For local editing, the model selects compositional parameters: location, extent, zone types, and relationships such as adjacency or containment. Water surrounding woodland and woodland surrounding water are two assignments to the same relation, not two dedicated scene templates. The local region compiler turns that relation into terrain, water, and vegetation.</p>
+          <figure class="wide-figure edit-comparison"><div class="image-pair"><div><span>Before the edit</span><img src="../assets/demo-20260928/edit-before.jpg" width="1600" height="900" loading="lazy" alt="Desert terrain before the recorded local edit." /></div><div><span>After the edit</span><img src="assets/edit-after.jpg" width="1600" height="900" loading="lazy" alt="A grove beside the trail after the recorded edit." /></div></div><figcaption><span class="figure-index">07</span> A local scene change from the recorded demonstration. The viewpoints differ; the full water boundary is outside this view. <a href="https://echovideo.jd.cn/jev-world/assets/demo-20260928/edit.mp4" target="_blank" rel="noopener">Watch the edit ↗</a></figcaption></figure>
+          <div class="citation-context">
+            <p>Before applying a result, the runtime checks that its target and source scene are still current. It prepares the resources and updates the visible scene only when the change is ready. The accepted edit becomes retained world state, so subsequent interaction and reconstruction can refer to it <a class="citation" href="#ref-occ">[3]</a>.</p>
+            <aside class="citation-note" id="ref-occ" aria-label="Reference 3"><span class="citation-number">[3]</span> <span>Kung &amp; Robinson, 1981</span><a href="https://doi.org/10.1145/319566.319567" target="_blank" rel="noopener">On optimistic methods for concurrency control</a></aside>
+          </div>
+        </section>
+
+        <section id="latency" data-section>
+          <p class="section-number">06 / RESPONSIVENESS</p>
+          <h2>Low latency is a system property.</h2>
+          <p>The planner supplies fast semantic decisions, but perceived latency also depends on when those decisions are requested and how much local work follows. Compact outputs avoid asking the model to place every object. Regional planning shares context across tiles. Prefetch moves work ahead of the player, and reusable assets reduce construction cost.</p>
+          <p>The useful measurement is the full path from a request to visible content: context preparation, model response, local generation, asset preparation, and rendering. These stages should be measured separately as well as together.</p>
+          <div class="latency-equation" aria-label="The response path goes from world context to the planner, local generation, and a visible update"><span>World context</span><b>→</b><span>Planner decision</span><b>→</b><span>Local generation</span><b>→</b><span>Visible update</span></div>
+          <p>Under warm-cache conditions, the estimated plan-to-scene latency is <strong>~2.3 seconds</strong>: ~0.7 seconds for the planner and 1.6 seconds for post-response processing and rendering. Directional prefetch schedules this work ahead of the player to keep exploration responsive.</p>
+          <p>WorldStream’s design connects semantic flexibility with explicit execution: regional and local plans describe a coherent world, procedural algorithms realize it, and persistent state lets interaction and exploration continue beyond a single scene.</p>
+        </section>
+
+        <section id="world-models" data-section>
+          <p class="section-number">07 / OUTLOOK</p>
+          <h2>Toward richer world models.</h2>
+          <p>WorldStream’s streaming planner, low-latency interaction, and persistent state provide a foundation for improving visual quality along two complementary directions.</p>
+          <div class="citation-context">
+            <p><strong>A control engine for streaming video.</strong> White-box geometry and low-poly assets could keep local compilation and rendering lightweight, leaving more compute for a streaming video decoder <a class="citation" href="#ref-worldplay">[4]</a>. The engine would retain layout, object identities, and edits, while the video model adds richer appearance from consistent spatial conditioning <a class="citation" href="#ref-programmable">[5]</a>. This could combine open-ended exploration and revisits with higher-quality generated video.</p>
+            <aside class="citation-note" aria-label="References 4 and 5"><div class="note-entry" id="ref-worldplay"><span class="citation-number">[4]</span> Sun et al., 2025<a href="https://arxiv.org/abs/2512.14614" target="_blank" rel="noopener">WorldPlay</a></div><div class="note-entry" id="ref-programmable"><span class="citation-number">[5]</span> Huang et al., 2026<a href="https://arxiv.org/abs/2609.10540" target="_blank" rel="noopener">Programmable World Model</a></div></aside>
+          </div>
+          <div class="citation-context">
+            <p><strong>A higher-fidelity explicit 3D world.</strong> The current prototype focuses on planning and interaction; its local generators and assets can be upgraded. More capable 3D generation and refinement methods <a class="citation" href="#ref-worldclaw">[6]</a><a class="citation" href="#ref-rcwm">[7]</a>, combined with prefetch and caching, could prepare detailed content ahead of arrival and reuse it across visits. This offers a path toward high-quality 3D world models with, in principle, unbounded maps and open-ended exploration.</p>
+            <aside class="citation-note" aria-label="References 6 and 7"><div class="note-entry" id="ref-worldclaw"><span class="citation-number">[6]</span> Guo et al., 2026<a href="https://arxiv.org/abs/2608.05248" target="_blank" rel="noopener">WorldClaw</a></div><div class="note-entry" id="ref-rcwm"><span class="citation-number">[7]</span> Li et al., 2026<a href="https://arxiv.org/abs/2609.11499" target="_blank" rel="noopener">Recursive Code World Models</a></div></aside>
+          </div>
+          <div class="closing-links"><a href="../index.html">Explore the project <span aria-hidden="true">↗</span></a><a href="../index.html#demo">Watch the full demo <span aria-hidden="true">↗</span></a></div>
+        </section>
+
+        <footer class="article-footer">
+          <p class="eyebrow">ACKNOWLEDGMENTS</p>
+          <p>Planning and semantic decisions use <a href="https://typesafe.ai/" target="_blank" rel="noopener">Jev from TypeSafe</a>. WorldStream supplies the world representation, local generators, and runtime integration. Illustrative 3D figures are reused from our technical report; screenshots and video are from the prototype.</p>
+          <p class="draft-footnote">Last updated September 29, 2026</p>
+        </footer>
+      </article>
+    </div>
+  </main>
+  <footer class="site-footer"><a class="wordmark" href="../index.html"><span aria-hidden="true">◆</span> WORLDSTREAM</a><a href="#top">Back to top ↑</a></footer>
+</body>
+</html>

@@ -7,6 +7,8 @@
 <p align="center">
   <a href="https://krennic999.github.io/WorldStream/"><img src="assets/link-project.svg" alt="🌐 Project Page" height="42" /></a>
   &nbsp;
+  <a href="https://krennic999.github.io/WorldStream/blog/"><img src="assets/link-blog.svg" alt="📖 Read Blog" height="42" /></a>
+  &nbsp;
   <a href="https://krennic999.github.io/WorldStream/#demo"><img src="assets/link-demo.svg" alt="▶ Watch Demo" height="42" /></a>
 </p>
 
