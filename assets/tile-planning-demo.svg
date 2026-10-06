@@ -1,0 +1,100 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 270" role="img" aria-labelledby="title desc">
+  <title id="title">Synchronized planner outputning stages and tile map</title>
+  <desc id="desc">Macro Planner, Micro Planner, and Local Code light up from left to right while matching planning detail appears on the tile map.</desc>
+  <defs><clipPath id="map"><rect x="930" y="25" width="650" height="220" rx="18"/></clipPath></defs>
+
+  <!-- Three stages, kept on the same baseline as the map -->
+  <g font-family="ui-monospace, SFMono-Regular, Menlo, monospace">
+    <g transform="translate(10 25)">
+      <rect width="250" height="220" rx="18" fill="#d8e5e6" stroke="#a9bdba" stroke-width="2"/>
+      <rect width="250" height="220" rx="18" fill="#dff6ed" stroke="#42bd9c" stroke-width="4" opacity="0"><animate attributeName="opacity" values="0;1;1;.18" keyTimes="0;.07;.29;.36" begin=".1s" dur="5.6s" fill="freeze"/></rect>
+      <g text-anchor="middle">
+        <text x="125" y="36" fill="#298870" font-size="12" font-weight="800" letter-spacing="1">01 · MACRO PLANNER</text>
+        <text x="125" y="76" fill="#20332f" font-family="Inter, sans-serif" font-size="22" font-weight="700">Plan region</text>
+        <text x="125" y="106" fill="#6c817c" font-size="12" font-weight="650">terrain · biome · settlement</text>
+      </g>
+      <g transform="translate(47 145)">
+        <rect width="48" height="13" rx="6.5" fill="#72ac84" opacity="0"><animate attributeName="opacity" from="0" to="1" begin=".45s" dur=".25s" fill="freeze"/></rect>
+        <rect x="56" width="44" height="13" rx="6.5" fill="#8b9996" opacity="0"><animate attributeName="opacity" from="0" to="1" begin=".75s" dur=".25s" fill="freeze"/></rect>
+        <rect x="108" width="48" height="13" rx="6.5" fill="#dda566" opacity="0"><animate attributeName="opacity" from="0" to="1" begin="1.05s" dur=".25s" fill="freeze"/></rect>
+        <path d="M5 32h146" stroke="#7ca79c" stroke-width="5" stroke-linecap="round" stroke-dasharray="0 150"><animate attributeName="stroke-dasharray" from="0 150" to="150 0" begin=".55s" dur=".8s" fill="freeze"/></path>
+      </g>
+      <circle cx="224" cy="25" r="7" fill="#44c6a2" opacity="0"><animate attributeName="opacity" values="0;1;1;0" keyTimes="0;.07;.29;.36" begin=".1s" dur="5.6s" fill="freeze"/></circle>
+    </g>
+    <path d="M273 135h28" stroke="#88aea5" stroke-width="3"/><path d="M294 128l8 7-8 7" fill="none" stroke="#88aea5" stroke-width="3"/>
+
+    <g transform="translate(315 25)">
+      <rect width="250" height="220" rx="18" fill="#d8e5e6" stroke="#a9bdba" stroke-width="2"/>
+      <rect width="250" height="220" rx="18" fill="#dff6ed" stroke="#42bd9c" stroke-width="4" opacity="0"><animate attributeName="opacity" values="0;0;1;1;.18" keyTimes="0;.31;.39;.64;.71" begin=".1s" dur="5.6s" fill="freeze"/></rect>
+      <g text-anchor="middle">
+        <text x="125" y="36" fill="#298870" font-size="12" font-weight="800" letter-spacing="1">02 · MICRO PLANNER</text>
+        <text x="125" y="76" fill="#20332f" font-family="Inter, sans-serif" font-size="22" font-weight="700">Resolve tile</text>
+        <text x="125" y="106" fill="#6c817c" font-size="12" font-weight="650">zones · roads · local roles</text>
+      </g>
+      <g transform="translate(79 137)">
+        <rect width="92" height="54" rx="8" fill="none" stroke="#77a79b" stroke-width="3"/>
+        <rect x="5" y="5" width="38" height="19" rx="3" fill="#d3c7a8" opacity="0"><animate attributeName="opacity" from="0" to="1" begin="2.2s" dur=".22s" fill="freeze"/></rect>
+        <rect x="49" y="5" width="38" height="19" rx="3" fill="#c6b99c" opacity="0"><animate attributeName="opacity" from="0" to="1" begin="2.45s" dur=".22s" fill="freeze"/></rect>
+        <rect x="5" y="30" width="38" height="19" rx="3" fill="#d8cdb0" opacity="0"><animate attributeName="opacity" from="0" to="1" begin="2.7s" dur=".22s" fill="freeze"/></rect>
+        <rect x="49" y="30" width="38" height="19" rx="3" fill="#9dc181" opacity="0"><animate attributeName="opacity" from="0" to="1" begin="2.95s" dur=".22s" fill="freeze"/></rect>
+        <path d="M46 0v54M0 27h92" stroke="#607579" stroke-width="5" opacity="0"><animate attributeName="opacity" from="0" to="1" begin="3.12s" dur=".25s" fill="freeze"/></path>
+      </g>
+      <circle cx="224" cy="25" r="7" fill="#44c6a2" opacity="0"><animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;.31;.39;.64;.71" begin=".1s" dur="5.6s" fill="freeze"/></circle>
+    </g>
+    <path d="M578 135h28" stroke="#88aea5" stroke-width="3"/><path d="M599 128l8 7-8 7" fill="none" stroke="#88aea5" stroke-width="3"/>
+
+    <g transform="translate(620 25)">
+      <rect width="250" height="220" rx="18" fill="#d8e5e6" stroke="#a9bdba" stroke-width="2"/>
+      <rect width="250" height="220" rx="18" fill="#dff6ed" stroke="#42bd9c" stroke-width="4" opacity="0"><animate attributeName="opacity" values="0;0;1" keyTimes="0;.70;.79" begin=".1s" dur="5.6s" fill="freeze"/></rect>
+      <g text-anchor="middle">
+        <text x="125" y="36" fill="#298870" font-size="12" font-weight="800" letter-spacing="1">03 · LOCAL CODE</text>
+        <text x="125" y="76" fill="#20332f" font-family="Inter, sans-serif" font-size="22" font-weight="700">Build + save</text>
+        <text x="125" y="106" fill="#6c817c" font-size="12" font-weight="650">assets · stable IDs · revisit</text>
+      </g>
+      <g opacity="0"><animate attributeName="opacity" from="0" to="1" begin="4.35s" dur=".3s" fill="freeze"/>
+        <circle cx="86" cy="164" r="16" fill="#57c9a6"/><path d="M78 164l6 6 11-15" fill="none" stroke="white" stroke-width="4"/>
+        <path d="M116 164h68" stroke="#7aa99d" stroke-width="9" stroke-linecap="round" stroke-dasharray="0 72"><animate attributeName="stroke-dasharray" from="0 72" to="72 0" begin="4.55s" dur=".55s" fill="freeze"/></path>
+      </g>
+      <circle cx="224" cy="25" r="7" fill="#44c6a2" opacity="0"><animate attributeName="opacity" values="0;0;1" keyTimes="0;.70;.79" begin=".1s" dur="5.6s" fill="freeze"/></circle>
+    </g>
+  </g>
+
+  <!-- One persistent map, refined in sync with the stages -->
+  <rect x="930" y="25" width="650" height="220" rx="18" fill="#d8d28c"/>
+  <g clip-path="url(#map)">
+    <path d="M925 18h260l58 57-53 182H925z" fill="#8fba82"/>
+    <path d="M1238 18h350v248h-226l-133-109z" fill="#e2aa67"/>
+    <path d="M1120 15l45 58 35-39 35 86 41-56 50 112-65-35-38 48-48-54-42 38-57-75z" fill="#87928f"/>
+    <path d="M1120 15l45 58 35-39 35 86" fill="none" stroke="#f5f6ef" stroke-width="8"/>
+    <path d="M1211 69c-13 39-5 68-27 102-15 24-11 49 8 86" fill="none" stroke="#45a8bc" stroke-width="9" stroke-linecap="round"/>
+    <path d="M928 210c73-18 119-7 172 9 57 17 99 14 146 1 58-16 105-9 160 14 50 20 102 16 180 2v40H928z" fill="#60afc0"/>
+    <g fill="#397a55"><circle cx="966" cy="69" r="5"/><circle cx="991" cy="60" r="4"/><circle cx="1022" cy="82" r="5"/><circle cx="1057" cy="64" r="4"/><circle cx="985" cy="111" r="5"/><circle cx="1031" cy="122" r="5"/></g>
+
+    <g opacity="0"><animate attributeName="opacity" values="0;1;1" keyTimes="0;.07;1" begin=".1s" dur="5.6s" fill="freeze"/>
+      <g opacity=".18"><rect x="930" y="25" width="260" height="132" fill="#49a16b"/><rect x="1190" y="25" width="130" height="176" fill="#687b79"/><rect x="1320" y="25" width="260" height="176" fill="#dd8f53"/><rect x="930" y="201" width="650" height="44" fill="#319db6"/></g>
+      <g fill="none" stroke="white" stroke-width="2.5" opacity=".7"><path d="M1060 25v220M1190 25v220M1320 25v220M1450 25v220M930 69h650M930 113h650M930 157h650M930 201h650"/></g>
+    </g>
+
+    <g opacity="0"><animate attributeName="opacity" values="0;0;1;1" keyTimes="0;.34;.41;1" begin=".1s" dur="5.6s" fill="freeze"/>
+      <rect x="1320" y="113" width="130" height="44" rx="6" fill="#fbfcf8" fill-opacity=".46" stroke="#38c9a3" stroke-width="6"><animate attributeName="stroke-width" values="6;10;6" begin="2.2s" dur=".75s" repeatCount="2"/></rect>
+      <path d="M1385 113v44M1320 135h130" stroke="#657478" stroke-width="6"/>
+      <rect x="1324" y="117" width="57" height="14" rx="2" fill="#d2c5a7"/><rect x="1389" y="117" width="57" height="14" rx="2" fill="#c7ba9d"/>
+      <rect x="1324" y="139" width="57" height="14" rx="2" fill="#d9ceb1"/><rect x="1389" y="139" width="57" height="14" rx="2" fill="#9bc080"/>
+    </g>
+
+    <g opacity="0"><animate attributeName="opacity" values="0;0;1" keyTimes="0;.75;.83" begin=".1s" dur="5.6s" fill="freeze"/>
+      <g fill="#687f84"><rect x="1330" y="119" width="10" height="10" rx="1"/><rect x="1345" y="118" width="13" height="11" rx="1"/><rect x="1363" y="120" width="10" height="9" rx="1"/></g>
+      <g fill="#5d797f"><rect x="1395" y="118" width="12" height="11" rx="1"/><rect x="1413" y="117" width="10" height="12" rx="1"/><rect x="1429" y="120" width="9" height="9" rx="1"/></g>
+      <g fill="#c77860"><rect x="1330" y="141" width="18" height="9" rx="1"/><rect x="1354" y="140" width="19" height="10" rx="1"/></g>
+      <g fill="#347753"><circle cx="1399" cy="143" r="2.5"/><circle cx="1417" cy="149" r="2.5"/><circle cx="1437" cy="142" r="2.5"/></g>
+      <circle cx="1385" cy="135" r="5" fill="#ff6760" stroke="white" stroke-width="2"><animate attributeName="r" values="5;8;5" begin="4.45s" dur=".7s" repeatCount="2"/></circle>
+    </g>
+  </g>
+
+  <rect x="930" y="25" width="650" height="220" rx="18" fill="none" stroke="#42bd9c" stroke-width="7" opacity="0"><animate attributeName="opacity" values="0;1;1;0" keyTimes="0;.07;.29;.36" begin=".1s" dur="5.6s" fill="freeze"/></rect>
+
+  <g font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-size="10" font-weight="800">
+    <g transform="translate(944 38)"><rect width="102" height="22" rx="11" fill="white" fill-opacity=".84"/><text x="12" y="15" fill="#397467">MACRO · 5×5</text></g>
+    <g transform="translate(1460 118)" opacity="0"><animate attributeName="opacity" values="0;0;1;1" keyTimes="0;.34;.41;1" begin=".1s" dur="5.6s" fill="freeze"/><rect width="104" height="22" rx="11" fill="white" fill-opacity=".88"/><text x="12" y="15" fill="#397467">MICRO · 2×2</text></g>
+  </g>
+</svg>
